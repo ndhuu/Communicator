@@ -7,8 +7,8 @@ const sendEmail = require("../somthing")
 app = express();
 
 Date.prototype.yyyymmdd = function () {
-    var mm = this.getMonth() + 1; // getMonth() is zero-based
-    var dd = this.getDate();
+    let mm = this.getMonth() + 1; // getMonth() is zero-based
+    let dd = this.getDate();
 
     return [this.getFullYear(),
     '-'+ (mm > 9 ? '' : '0') + mm,
@@ -20,34 +20,34 @@ Date.prototype.yyyymmdd = function () {
 // schedule tasks to be run on the server
 cron.schedule("00 10 1 * * 0-6", function () {
     console.log("Daily Email Notification Sending");
-    var day = Date(Date.now());
-    var nextDay = new Date(day);
+    let day = new Date(Date.now());
+    let nextDay = new Date(day);
     nextDay.setDate(day.getDate() + 1);
-    var nextday_str = nextDay.yyyymmdd();
+    let nextday_str = nextDay.yyyymmdd();
     db = getDatabase();
 
-    var select = "SELECT s FROM Subcription NATURAL JOIN Users NATURAL JOIN Events ";
-    var common_condition = "WHERE s.upcomingEventSubcription = 'Y' ";
+    let select = "SELECT s FROM Subcription NATURAL JOIN Users NATURAL JOIN Events ";
+    let common_condition = "WHERE s.upcomingEventSubcription = 'Y' ";
 
     //send email to admin
-    var admin_condition = "AND s.accountType = \"admin\" AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
-    var query = select + common_condition + admin_condition;
+    let admin_condition = "AND s.accountType = 'admin' AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
+    let query = select + common_condition + admin_condition;
     let query = db.query(query, (err, results) => {
         if (err) throw err;
-        var admin_results = results;
+        let admin_results = results;
         if (admin_results.length != 0) {
-            var hashTable = [];
+            let hashTable = [];
             for (let admin_res of admin_results) {
                 if (hashTable.find(element => element.key === admin_res.eventID)) {
                     hashTable.push({ key: res.eventID, value: [res] })
                 }
                 else {
-                    var i = hashTable.indexOf(hashTable.find(element => element.key === admin_res.eventID))
+                    let i = hashTable.indexOf(hashTable.find(element => element.key === admin_res.eventID))
                     hashTable[i].value.push(res);
                 }
             }
             for (let ht of hashTable) {
-                var mailing_list = [];
+                let mailing_list = [];
                 for (let t of ht.value) {
                     mailing_list.push(t.emailAddress);
                 }
@@ -61,25 +61,25 @@ cron.schedule("00 10 1 * * 0-6", function () {
     //send email to admin
 
     //send email to users
-    var user_result = null;
-    var user_condition = "AND s.accountType = 'user' AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
+    let user_result = null;
+    let user_condition = "AND s.accountType = 'user' AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
     query = select + common_condition + user_condition
     let query = db.query(query, (err, results) => {
         if (err) throw err;
-        var user_results = results;
+        let user_results = results;
         if (user_results.length != 0) {
-            var hashTable = [];
+            let hashTable = [];
             for (let admin_res of user_results) {
                 if (hashTable.find(element => element.key === admin_res.eventID)) {
                     hashTable.push({ key: res.eventID, value: [res] })
                 }
                 else {
-                    var i = hashTable.indexOf(hashTable.find(element => element.key === admin_res.eventID))
+                    let i = hashTable.indexOf(hashTable.find(element => element.key === admin_res.eventID))
                     hashTable[i].value.push(res);
                 }
             }
             for (let ht of hashTable) {
-                var mailing_list = [];
+                let mailing_list = [];
                 for (let t of ht.value) {
                     mailing_list.push(t.emailAddress);
                 }
