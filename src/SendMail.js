@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
 const path = require('path');
-const email_type = ['full', 'upcoming', 'update', 'confirmation'];
+const email_type = ['full', 'upcoming', 'update', 'confirmation', 'cancellation'];
 const organization_email = 'testsendemail1122@gmail.com';
 const organization_email_pass = 'Tttt1234';
 
@@ -21,29 +21,33 @@ var event =
 
 function selectTemplate(type) {
 	if (type === email_type[0]) {
-		template = 'FullSubscribe'
+		template = 'FullSubscribe';
 	} else if (type === email_type[1]) {
-		template = 'EventUpcoming'
+		template = 'EventUpcoming';
 	} else if (type === email_type[2]) {
-		template = 'EventUpdate'
+		template = 'EventUpdate';
 	} else if (type === email_type[3]) {
-		template = 'Confirmation'
+		template = 'Confirmation';
+	} else if (type === email_type[4]) {
+		template = 'Cancellation';
 	} else {
-		console.log("Invalid request")
-		template = 'Invalid'
+		console.log("Invalid request");
+		template = 'Invalid';
 	}
 	return template;
 }
 
 function selectSubject(event, type) {
 	if (type === email_type[0]) {
-		subject = `Fully subscribed event ${event.name}`
+		subject = `Fully subscribed of event ${event.name}`;
 	} else if (type === email_type[1]) {
-		subject = `Upcoming event ${event.name}`
+		subject = `Upcoming event ${event.name}`;
 	} else if (type === email_type[2]) {
 		subject = `Event ${event.name} has new updates`;
 	} else if (type === email_type[3]) {
 		subject = `Confirmation of event ${event.name} registration`; 
+	} else if (type === email_type[4]) {
+		subject = `Event ${event.name} cancellation`;
 	} else {
 		subject = 'Invalid';
 	}
