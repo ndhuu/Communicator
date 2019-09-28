@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/CitiHackathon19-Team2/Communicator/issues"
   },
-  "homepage": "https://github.com/CitiHackathon19-Team2/Communicator#readme"
+  "homepage": "https://github.com/CitiHackathon19-Team2/Communicator#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.21.1",
+    "morgan": "^1.9.1"
+  }
 }
