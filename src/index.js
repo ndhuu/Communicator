@@ -36,3 +36,9 @@ app.get('/', (req, res) => {
 app.listen(3001, () => {
   console.log('listening on port 3001');
 });
+
+startDatabase().then(async () => {
+  await insertAd({title: 'Hello, now from the in-memory database!'});
+
+
+});
