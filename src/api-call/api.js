@@ -56,7 +56,7 @@ function callEventCancelNoti(eventId) {
                 sendEmail("default", {
                     'date': ht.value[0].startDateTime, 'name': ht.value[0].eventName,
                     'description': ht.value[0].description, 'mailing_list': mailing_list
-                }, email_type[2]);
+                }, email_type[4]);
             }
         }
         const deleteEventAction = async () => {
