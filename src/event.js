@@ -5,56 +5,39 @@ const app = express();
 
 const body_parser = require('body-parser');
 
-// parse JSON (application/json content-type)
-//server.use(body_parser.json());
-const conn = data.startDatabase();
-
-//show all users
-app.post('/events/eventsUpdates',(req, res) => {
+//need to handle err and check if null
+//update full subscription in db
+app.get('/events/fullSubscription', async (req, res) => {
+  try {
+    const conn = await data.getDatabase();
     const eventId = req.query.eventId;
     const userId = req.query.userId;
-    let sql = `SELECT * FROM user WHERE userId = ${userId}`;
-    let query = conn.query(sql, (err, results) => {
-    if(err) throw err;
-    res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  });
+    const subscribed = 'Y';
+    let sql = `UPDATE subscription SET fullSubscription = "${subscribed}" WHERE userId = ${userId}`;
+    const [rows, fields] = await conn.execute(sql);
+    res.send(JSON.stringify({"result": "User has successfully subscribe for the event"}));
+  }
+  catch(err) {
+    res.status(500).send(`Fail to update full subscription in database`);
+  }
+    
 });
- 
-//show single product
-app.get('/api/products/:id',(req, res) => {
-  let sql = "SELECT * FROM product WHERE product_id="+req.params.id;
-  let query = conn.query(sql, (err, results) => {
-    if(err) throw err;
-    res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  });
-});
- 
-//add new product
-app.post('/api/products',(req, res) => {
-  let data = {product_name: req.body.product_name, product_price: req.body.product_price};
-  let sql = "INSERT INTO product SET ?";
-  let query = conn.query(sql, data,(err, results) => {
-    if(err) throw err;
-    res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  });
-});
- 
-//update product
-app.put('/api/products/:id',(req, res) => {
-  let sql = "UPDATE product SET product_name='"+req.body.product_name+"', product_price='"+req.body.product_price+"' WHERE product_id="+req.params.id;
-  let query = conn.query(sql, (err, results) => {
-    if(err) throw err;
-    res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  });
-});
- 
+
+
 //Delete product
-app.delete('/api/products/:id',(req, res) => {
-  let sql = "DELETE FROM product WHERE product_id="+req.params.id+"";
-  let query = conn.query(sql, (err, results) => {
-    if(err) throw err;
-      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  });
+app.delete('/events/fullSubscription', async(req, res) => {
+  try {
+    const conn = await data.getDatabase();
+    const eventId = req.query.eventId;
+    const userId = req.query.userId;
+    const subscribed = 'N';
+    let sql = `UPDATE subscription SET fullSubscription = "${subscribed}" WHERE userId = ${userId}`;
+    const [rows, fields] = await conn.execute(sql);
+    res.send(JSON.stringify({"result": "User has successfully un-subscribe for the event"}));
+  }
+  catch(err) {
+    res.status(500).send(`Fail to delete full subscription in database`);
+  }
 });
  
 //Server listening

@@ -59,24 +59,34 @@ async function sendEmail(user, event, type) {
 	var myTemplate = pug.compileFile(path.resolve(__dirname) + `\\Emails\\${selectTemplate(type)}\\html.pug`);
     if (type !== "invalid") { 
     // create reusable transporter object using the default SMTP transport
-	    let transporter = nodemailer.createTransport({
-	        host: 'smtp.gmail.com',
-	      	port: 587,
-	        secure: false, // true for 465, false for other ports
-	        auth: {
-	            user: organization_email, 
-	            pass: organization_email_pass
-	        }
-	    });
-
-	    // send mail with defined transport object
-	    let info = await transporter.sendMail({
-	        from: organization_email, 
-	        to: event.mailing_list,
-	        subject: selectSubject(event, type),
-	        html: myTemplate({userName: user.name, name: event.name, description: event.description, date: event.date})
-	    });
-	    console.log('Message sent: %s', info.messageId);
+    	try {
+		    let transporter = nodemailer.createTransport({
+		        host: 'smtp.gmail.com',
+		      	port: 587,
+		        secure: false, // true for 465, false for other ports
+		        auth: {
+		            user: organization_email, 
+		            pass: organization_email_pass
+		        }
+		    });
+		    console.log(`Created transport using gmail service ${transporter.host, transporter.port}`)
+		}
+		catch(err) {
+			res.status(500).send(`Failed to create smtp mail transport service`);
+		}
+		try {
+		    // send mail with defined transport object
+		    let info = await transporter.sendMail({
+		        from: organization_email, 
+		        to: event.mailing_list,
+		        subject: selectSubject(event, type),
+		        html: myTemplate({userName: user.name, name: event.name, description: event.description, date: event.date})
+		    });
+		    console.log(`Send email to mailing_list`)
+		}
+		catch(err) {
+			res.status(500).send(`Failed to send mail using smtp mail transport service`);
+		}
 	}
 }
 
