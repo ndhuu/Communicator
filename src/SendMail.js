@@ -1,26 +1,29 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
 const path = require('path');
-
 const email_type = ['full', 'upcoming', 'update', 'confirmation', 'cancelation', 'upcoming admin'];
 
 const organization_email = 'testsendemail1122@gmail.com';
 const organization_email_pass = 'Tttt1234';
 
-//an example of how to use the function
-//sendEmail(user, event, 'confirmation').catch(console.error);
-// var user = 
-// {
-// 	name: 'Test'
-// }
+var user1 = 
+{
+	name: 'Test1'
+}
 
-// var event = 
-// {
-// 	name: 'TestEvent',
-// 	description: 'A stub event',
-// 	mailing_list: ['testsendemail1122@gmail.com', 'testsendemail1122+another@gmail.com'],
-// 	date: '14:00 Monday 20 Sep 3020'	
-// }
+var user2 = 
+{
+	name: 'Test2'
+}
+
+var event = 
+{
+	name: 'TestEvent',
+	description: 'A stub event',
+	mailing_list: ['testsendemail1122@gmail.com', 'testsendemail1122+another@gmail.com'],
+	volunteer_list: [user1, user2],
+	date: '14:00 Monday 20 Sep 3020'	
+}
 
 function selectTemplate(type) {
 	if (type === email_type[0]) {
@@ -33,6 +36,8 @@ function selectTemplate(type) {
 		template = 'Confirmation';
 	} else if (type === email_type[4]) {
 		template = 'Cancellation';
+	} else if (type === email_type[5]) {
+		template = 'EventUpcomingAdmin';
 	} else {
 		console.log("Invalid request");
 		template = 'Invalid';
@@ -51,6 +56,8 @@ function selectSubject(event, type) {
 		subject = `Confirmation of event ${event.name} registration`; 
 	} else if (type === email_type[4]) {
 		subject = `Event ${event.name} cancellation`;
+	} else if (type === email_type[5]) {
+		subject = `Upcoming event ${event.name}`;
 	} else {
 		subject = 'Invalid';
 	}
@@ -61,34 +68,28 @@ function selectSubject(event, type) {
 async function sendEmail(user, event, type) {
 	var myTemplate = pug.compileFile(path.resolve(__dirname) + `\\Emails\\${selectTemplate(type)}\\html.pug`);
     if (type !== "invalid") { 
-    // create reusable transporter object using the default SMTP transport
-    	try {
-		    let transporter = nodemailer.createTransport({
-		        host: 'smtp.gmail.com',
-		      	port: 587,
-		        secure: false, // true for 465, false for other ports
-		        auth: {
-		            user: organization_email, 
-		            pass: organization_email_pass
-		        }
-		    });
-		    console.log(`Created transport using gmail service ${transporter.host, transporter.port}`)
-		}
-		catch(err) {
-			res.status(500).send(`Failed to create smtp mail transport service`);
-		}
+    // create reusable transporter object using the default gmail SMTP transport
+	    let transporter = nodemailer.createTransport({
+	        host: 'smtp.gmail.com',
+	      	port: 587,
+	        secure: false, // true for 465, false for other ports
+	        auth: {
+	            user: organization_email, 
+	            pass: organization_email_pass
+	        }
+	    });
 		try {
 		    // send mail with defined transport object
 		    let info = await transporter.sendMail({
 		        from: organization_email, 
 		        to: event.mailing_list,
 		        subject: selectSubject(event, type),
-		        html: myTemplate({userName: user.name, name: event.name, description: event.description, date: event.date})
+		        html: myTemplate({userName: user.name, name: event.name, description: event.description, date: event.date, users: event.volunteer_list})
 		    });
 		    console.log(`Send email to mailing_list`)
 		}
 		catch(err) {
-			res.status(500).send(`Failed to send mail using smtp mail transport service`);
+			console.log(`Failed to send mail using smtp mail transport service`);
 		}
 	}
 }
@@ -97,4 +98,7 @@ module.export = {
 	sendEmail,
 	email_type
 };
+
+//an example of how to use the function
+sendEmail(user1, event, 'upcoming admin');
 
