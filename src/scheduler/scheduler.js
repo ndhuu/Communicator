@@ -2,48 +2,45 @@ const cron = require("node-cron");
 const express = require("express");
 
 const { getDatabase, startDatabase, } = require('../ConnectionManager');
-const {sendEmail, email_type} = require("../SendMail")
+const { sendEmail, email_type } = require("../SendMail")
 const const_params = require("../Params/params")
 
-app = express();
+//app = express();
 
 Date.prototype.yyyymmdd = function () {
     let mm = this.getMonth() + 1; // getMonth() is zero-based
     let dd = this.getDate();
 
     return [this.getFullYear(),
-    '-'+ (mm > 9 ? '' : '0') + mm,
-    '-'+ (dd > 9 ? '' : '0') + dd
+    '-' + (mm > 9 ? '' : '0') + mm,
+    '-' + (dd > 9 ? '' : '0') + dd
     ].join('');
 };
 
-
-// schedule tasks to be run on the server
-cron.schedule("00 10 1 * * 0-6", function () {
-    console.log("Daily Email Notification Sending");
+function task() {
     let day = new Date(Date.now());
     let nextDay = new Date(day);
     nextDay.setDate(day.getDate() + 1);
     let nextday_str = nextDay.yyyymmdd();
     db = getDatabase();
 
-    let select = "SELECT s FROM " + const_params.SUBSCRIPTION_DATABASE + " NATURAL JOIN " + const_params.USERS_DATABASE + " NATURAL JOIN " + const_params.EVENTS_DATABASE + " ";
-    let common_condition = "WHERE s.upcomingEventSubcription = 'Y' AND s.eventStatus NOT IN ('Open', 'Closed')";
+    let select = "SELECT * FROM " + const_params.SUBSCRIPTION_DATABASE + " NATURAL JOIN " + const_params.USERS_DATABASE + " NATURAL JOIN " + const_params.EVENTS_DATABASE + " ";
+    let common_condition = "WHERE upcomingSubscription = 'Y' AND eventStatus IN ('Open', 'Closed')";
 
     //send email to admin
-    let admin_condition = "AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
-    let query = select + common_condition + admin_condition;
-    let query = db.query(query, (err, results) => {
+    let admin_condition = "AND SUBSTRING(startDateTime, 1, 10) = " + nextday_str + ";";
+    let sql_query = select + common_condition + admin_condition;
+    let query = db.query(sql_query, (err, results) => {
         if (err) throw err;
         let admin_results = results;
         if (admin_results.length != 0) {
             let hashTable = [];
             for (let admin_res of admin_results) {
-                if (hashTable.find(element => element.key === admin_res.eventID)) {
-                    hashTable.push({ key: res.eventID, value: [res] })
+                if (hashTable.find(element => element.key === admin_res.eventId)) {
+                    hashTable.push({ key: res.eventId, value: [res] })
                 }
                 else {
-                    let i = hashTable.indexOf(hashTable.find(element => element.key === admin_res.eventID))
+                    let i = hashTable.indexOf(hashTable.find(element => element.key === admin_res.eventId))
                     hashTable[i].value.push(res);
                 }
             }
@@ -55,7 +52,7 @@ cron.schedule("00 10 1 * * 0-6", function () {
                         mailing_list.push(t.emailAddress);
                     }
                     else {
-                        volunteer_list.push(t);
+                        volunteer_list.push(str(t.firstName + ' ' + t.lastName));
                     }
                     mailing_list.push(t.emailAddress);
                 }
@@ -70,19 +67,19 @@ cron.schedule("00 10 1 * * 0-6", function () {
 
     //send email to users
     let user_result = null;
-    let user_condition = "AND s.accountType = 'volunteer' AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
-    query = select + common_condition + user_condition
-    let query = db.query(query, (err, results) => {
+    let user_condition = "AND accountType = 'volunteer' AND SUBSTRING(startDateTime, 1, 10) = " + nextday_str + ";";
+    sql_query = select + common_condition + user_condition
+    let query = db.query(sql_query, (err, results) => {
         if (err) throw err;
         let user_results = results;
         if (user_results.length != 0) {
             let hashTable = [];
             for (let user_res of user_results) {
-                if (hashTable.find(element => element.key === user_res.eventID)) {
-                    hashTable.push({ key: res.eventID, value: [res] })
+                if (hashTable.find(element => element.key === user_res.eventId)) {
+                    hashTable.push({ key: res.eventId, value: [res] })
                 }
                 else {
-                    let i = hashTable.indexOf(hashTable.find(element => element.key === user_res.eventID))
+                    let i = hashTable.indexOf(hashTable.find(element => element.key === user_res.eventId))
                     hashTable[i].value.push(res);
                 }
             }
@@ -98,7 +95,6 @@ cron.schedule("00 10 1 * * 0-6", function () {
             }
         }
     });
-    //send email to users
-});
+}
 
-//app.listen("3128");
+module.exports = { task }
