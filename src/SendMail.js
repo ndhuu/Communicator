@@ -1,7 +1,9 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
 const path = require('path');
-const email_type = ['full', 'upcoming', 'update', 'confirmation', 'cancellation'];
+
+const email_type = ['full', 'upcoming', 'update', 'confirmation', 'cancelation', 'upcoming admin'];
+
 const organization_email = 'testsendemail1122@gmail.com';
 const organization_email_pass = 'Tttt1234';
 

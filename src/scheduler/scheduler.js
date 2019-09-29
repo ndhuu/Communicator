@@ -2,7 +2,7 @@ const cron = require("node-cron");
 const express = require("express");
 
 const { getDatabase, startDatabase, } = require('../ConnectionManager');
-const sendEmail = require("../somthing")
+const {sendEmail, email_type} = require("../SendMail")
 const const_params = require("../Params/params")
 
 app = express();
@@ -62,7 +62,7 @@ cron.schedule("00 10 1 * * 0-6", function () {
                 sendEmail("admin", {
                     'date': ht.value[0].startDateTime, 'name': ht.value[0].eventName,
                     'description': ht.value[0].description, 'mailing_list': mailing_list, 'volunteer_list': volunteer_list
-                });
+                }, email_type[5]);
             }
         }
     });
@@ -94,7 +94,7 @@ cron.schedule("00 10 1 * * 0-6", function () {
                 sendEmail("user", {
                     'date': ht.value[0].startDateTime, 'name': ht.value[0].eventName,
                     'description': ht.value[0].description, 'mailing_list': mailing_list
-                });
+                }, email_type[2]);
             }
         }
     });
