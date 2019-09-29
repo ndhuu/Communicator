@@ -12,7 +12,6 @@ const {callEventUpdateNoti,
 //server.use(body_parser.json());
 //const conn = data.startDatabase();
 
-//need to handle err and check if null
 //update full subscription in db
 app.get('/events/fullSubscription', async (req, res) => {
   try {
@@ -30,8 +29,7 @@ app.get('/events/fullSubscription', async (req, res) => {
     
 });
 
-
-//Delete product
+//Delete full subscription in db
 app.delete('/events/fullSubscription', async(req, res) => {
   try {
     const conn = await data.getDatabase();
@@ -45,7 +43,6 @@ app.delete('/events/fullSubscription', async(req, res) => {
   catch(err) {
     res.status(500).send(`Fail to delete full subscription in database`);
   }
-
 
 
 app.post('/events/eventsUpdates', (req, res) => {
