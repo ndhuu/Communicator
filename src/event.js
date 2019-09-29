@@ -12,7 +12,6 @@ const {callEventUpdateNoti,
   callFullSubsNoti,
   sendConfirmationNoti } = require('./api-call/api');
 
-// parse JSON (application/json content-type)
 //server.use(body_parser.json());
 //const conn = data.startDatabase();
 
