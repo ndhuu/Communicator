@@ -59,10 +59,6 @@ function callEventCancelNoti(eventId) {
                 }, email_type[4]);
             }
         }
-        const deleteEventAction = async () => {
-            const response = await fetch('http://localhost:3001/events?' + eventId);
-            // do something with myJson
-        }
     });
 }
 
