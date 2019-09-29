@@ -5,19 +5,20 @@ const email_type = ['full', 'upcoming', 'update', 'confirmation', 'cancellation'
 const organization_email = 'testsendemail1122@gmail.com';
 const organization_email_pass = 'Tttt1234';
 
-// async..await is not allowed in global scope, must use a wrapper
-var user = 
-{
-	name: 'Test'
-}
+//an example of how to use the function
+//sendEmail(user, event, 'confirmation').catch(console.error);
+// var user = 
+// {
+// 	name: 'Test'
+// }
 
-var event = 
-{
-	name: 'TestEvent',
-	description: 'A stub event',
-	mailing_list: ['testsendemail1122@gmail.com', 'testsendemail1122+another@gmail.com'],
-	date: '14:00 Monday 20 Sep 3020'	
-}
+// var event = 
+// {
+// 	name: 'TestEvent',
+// 	description: 'A stub event',
+// 	mailing_list: ['testsendemail1122@gmail.com', 'testsendemail1122+another@gmail.com'],
+// 	date: '14:00 Monday 20 Sep 3020'	
+// }
 
 function selectTemplate(type) {
 	if (type === email_type[0]) {
@@ -95,5 +96,3 @@ module.export = {
 	email_type
 };
 
-//an example of how to use the function
-//sendEmail(user, event, 'confirmation').catch(console.error);
