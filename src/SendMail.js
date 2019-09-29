@@ -66,9 +66,9 @@ function selectSubject(event, type) {
 
 
 async function sendEmail(user, event, type) {
-	var myTemplate = pug.compileFile(path.resolve(__dirname) + `\\Emails\\${selectTemplate(type)}\\html.pug`);
-    if (type !== "invalid") { 
-    // create reusable transporter object using the default gmail SMTP transport
+    if (email_type.includes(type)) { 
+		var myTemplate = pug.compileFile(path.resolve(__dirname) + `\\Emails\\${selectTemplate(type)}\\html.pug`);
+		// create reusable transporter object using the default gmail SMTP transport
 	    let transporter = nodemailer.createTransport({
 	        host: 'smtp.gmail.com',
 	      	port: 587,
@@ -92,6 +92,10 @@ async function sendEmail(user, event, type) {
 			console.log(`Failed to send mail using smtp mail transport service`);
 		}
 	}
+	else {
+		console.log('Invalid email sending request')
+	}
+
 }
 
 module.export = {

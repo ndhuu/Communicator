@@ -6,15 +6,17 @@ const app = express();
 const body_parser = require('body-parser');
 const const_params = require('./Params/params')
 const { sendEmail, email_type } = require("./SendMail")
+const {getDatabase,
+  startDatabase} = require("./ConnectionManager")
 
 const { task } = require("./scheduler/scheduler")
+const cron = require("node-cron");
 // schedule tasks to be run on the server
 cron.schedule("00 10 1 * * 0-6", function () {
   console.log("Daily Email Notification Sending");
   task()
 });
 
-const cron = require("node-cron");
 
 const { callEventUpdateNoti,
   callEventCancelNoti,
@@ -24,7 +26,7 @@ const { callEventUpdateNoti,
 //server.use(body_parser.json());
 //const conn = data.startDatabase();
 
-app.post('/events/eventsUpdates', (req, res) => {
+app.post('/events/eventsUpdates', async (req, res) => {
   try {
     const conn = await data.getDatabase();
     const eventId = req.query.eventId;
@@ -45,7 +47,7 @@ app.post('/events/eventsUpdates', (req, res) => {
   }
 });
 
-app.post('/events/cancelNoti', (req, res) => {
+app.post('/events/cancelNoti', async (req, res) => {
   try {
     const conn = await data.getDatabase();
     const eventId = req.query.eventId;
@@ -99,7 +101,7 @@ app.delete('/events/fullSubscription', async(req, res) => {
   }
 });
 
-app.post('/events/fullSubcriptionNoti', (req, res) => {
+app.post('/events/fullSubcriptionNoti', async (req, res) => {
   try {
     const conn = await data.getDatabase();
     const eventId = req.query.eventId;
@@ -110,7 +112,7 @@ app.post('/events/fullSubcriptionNoti', (req, res) => {
   }
 });
 
-app.post('/events/sendConfirmationNoti', (req, res) => {
+app.post('/events/sendConfirmationNoti', async (req, res) => {
   try {
     const conn = await data.getDatabase();
     const eventId = req.query.eventId;
@@ -155,6 +157,5 @@ app.delete('/events/upcomingEventSubscription', async (req, res) => {
 });
 
 app.listen(3001, () => {
-
   console.log('listening on port 3001');
 });
