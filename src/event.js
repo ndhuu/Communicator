@@ -16,10 +16,11 @@ const { callEventUpdateNoti,
 
 // parse JSON (application/json content-type)
 //server.use(body_parser.json());
-const conn = data.startDatabase();
+//const conn = data.startDatabase();
 
 app.post('/events/eventsUpdates', (req, res) => {
   try {
+    const conn = await data.getDatabase();
     const eventId = req.query.eventId;
     const userId = req.query.userId;
     let sql_query = `SELECT u FROM ${const_params.USERS_DATABASE} WHERE u.userId = ${userId} AND u.accountType = 'admin' ;`
@@ -40,6 +41,7 @@ app.post('/events/eventsUpdates', (req, res) => {
 
 app.post('/events/cancelNoti', (req, res) => {
   try {
+    const conn = await data.getDatabase();
     const eventId = req.query.eventId;
     const userId = req.query.userId;
     let sql_query = `SELECT u FROM ${const_params.USERS_DATABASE} WHERE u.userId = ${userId} AND u.accountType = 'admin' ;`
@@ -61,6 +63,7 @@ app.post('/events/cancelNoti', (req, res) => {
 
 app.post('/events/fullSubcriptionNoti', (req, res) => {
   try {
+    const conn = await data.getDatabase();
     const eventId = req.query.eventId;
     callFullSubsNoti(eventId);
     res.send(JSON.stringify({ "result": " Emails will be sent to all admins for this event" }))
@@ -71,6 +74,7 @@ app.post('/events/fullSubcriptionNoti', (req, res) => {
 
 app.post('/events/sendConfirmationNoti', (req, res) => {
   try {
+    const conn = await data.getDatabase();
     const eventId = req.query.eventId;
     const userId = req.query.userId;
     sendConfirmationNoti(userId, eventId)
