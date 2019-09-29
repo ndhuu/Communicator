@@ -28,7 +28,7 @@ cron.schedule("00 10 1 * * 0-6", function () {
     db = getDatabase();
 
     let select = "SELECT s FROM " + const_params.SUBSCRIPTION_DATABASE + " NATURAL JOIN " + const_params.USERS_DATABASE + " NATURAL JOIN " + const_params.EVENTS_DATABASE + " ";
-    let common_condition = "WHERE s.upcomingEventSubcription = 'Y' ";
+    let common_condition = "WHERE s.upcomingEventSubcription = 'Y' AND s.eventStatus NOT IN ('Open', 'Closed')";
 
     //send email to admin
     let admin_condition = "AND SUBSTRING(s.startDateTime, 1, 10) = " + nextday_str + ";";
@@ -101,4 +101,4 @@ cron.schedule("00 10 1 * * 0-6", function () {
     //send email to users
 });
 
-app.listen("3128");
+//app.listen("3128");

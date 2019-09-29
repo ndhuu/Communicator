@@ -83,3 +83,36 @@ app.post('/events/sendConfirmationNoti', (req, res) => {
     res.status(500).send(`Confirm went wrong`);
   }
 });
+
+app.get('/events/upcomingEventSubscription', async (req, res) => {
+  try {
+    const conn = await data.getDatabase();
+    const eventId = req.query.eventId;
+    const userId = req.query.userId;
+    const subscribed = 'Y';
+    let sql = `UPDATE ${const_params.SUBSCRIPTION_DATABASE} SET upcomingSubscription = "${subscribed}" WHERE userId = ${userId} AND eventId = ${eventId};`;
+    const [rows, fields] = await conn.execute(sql);
+    res.send(JSON.stringify({"result": "User has successfully subscribe for the event"}));
+  }
+  catch(err) {
+    res.status(500).send(`something went wrong`);
+  }
+    
+});
+
+
+//Delete product
+app.delete('/events/upcomingEventSubscription', async(req, res) => {
+  try {
+    const conn = await data.getDatabase();
+    const eventId = req.query.eventId;
+    const userId = req.query.userId;
+    const subscribed = 'N';
+    let sql = `UPDATE ${const_params} SET upcomingSubscription = "${subscribed}" WHERE userId = ${userId} AND eventId = ${eventId};`;
+    const [rows, fields] = await conn.execute(sql);
+    res.send(JSON.stringify({"result": "User has successfully un-subscribe for the event"}));
+  }
+  catch(err) {
+    res.status(500).send(`something went wrong`);
+  }
+});
