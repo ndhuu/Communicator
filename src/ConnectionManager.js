@@ -10,7 +10,7 @@ async function startDatabase() {
     const conn = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: '',
+        password: 'root',
         database: 'communicatordb'
     });
     conn.connect((err) =>{

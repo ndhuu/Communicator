@@ -30,3 +30,4 @@ node_modules/*
 
 ### VS Code ###
 .vscode/
+node_modules/**
