@@ -1,0 +1,37 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CitiHackathon19-Team2/Communicator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CitiHackathon19-Team2/Communicator/issues"
+  },
+  "homepage": "https://github.com/CitiHackathon19-Team2/Communicator#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "cron": "^1.7.2",
+    "email-templates": "^6.0.2",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "helmet": "^3.21.1",
+    "morgan": "^1.9.1",
+    "pug": "^2.0.4",
+    "mysql": "^2.17.1",
+    "mysql2": "^1.7.0",
+    "nodemon": "^1.19.2",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.3.0"
+  },
+  "devDependencies": {}
+}
