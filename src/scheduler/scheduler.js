@@ -18,6 +18,7 @@ Date.prototype.yyyymmdd = function () {
 };
 
 function task() {
+    console.log("schduled task started")
     let day = new Date(Date.now());
     let nextDay = new Date(day);
     nextDay.setDate(day.getDate() + 1);

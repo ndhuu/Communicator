@@ -2,7 +2,7 @@
   "name": "package.json",
   "version": "1.0.0",
   "description": "",
-  "main": "event.js",
+  "main": ".js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,6 +28,8 @@
     "morgan": "^1.9.1",
     "pug": "^2.0.4",
     "mysql": "^2.17.1",
+    "mysql2": "^1.7.0",
+    "nodemon": "^1.19.2",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.3.0"
   },

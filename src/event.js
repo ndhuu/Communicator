@@ -11,6 +11,7 @@ const {getDatabase,
 
 const { task } = require("./scheduler/scheduler")
 const cron = require("node-cron");
+
 // schedule tasks to be run on the server
 cron.schedule("00 10 1 * * 0-6", function () {
   console.log("Daily Email Notification Sending");
@@ -69,7 +70,7 @@ app.post('/events/cancelNoti', async (req, res) => {
 });
 
 //update full subscription in db
-app.get('/events/fullSubscription', async (req, res) => {
+app.post('/events/fullSubscription', async (req, res) => {
   try {
     const conn = await data.getDatabase();
     const eventId = req.query.eventId;
@@ -124,7 +125,7 @@ app.post('/events/sendConfirmationNoti', async (req, res) => {
   }
 });
 
-app.get('/events/upcomingEventSubscription', async (req, res) => {
+app.post('/events/upcomingEventSubscription', async (req, res) => {
   try {
     const conn = await data.getDatabase();
     const eventId = req.query.eventId;
